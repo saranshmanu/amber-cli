@@ -13,7 +13,6 @@ from src.constant import (
     about_model_command,
     about_prompt_command,
     about_show_supported_model_command,
-    about_get_datetime_command,
     about_get_key_command,
 )
 
