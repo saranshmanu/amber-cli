@@ -39,7 +39,7 @@ def set_api_key(api_key=""):
     # "sk-BAwzEWP224DgC1k2tDAxT3BlckFJU7OMYhzfmEvqrEDuvlVA"
     now = datetime.now()
 
-    if api_key == "" or api_key == None:
+    if api_key == "" or api_key == None or type(api_key) != str:
         raise APIKeyNotSetException()
 
     with dbm.open(path, "c") as db:
@@ -50,12 +50,12 @@ def set_api_key(api_key=""):
 # The function returns information about all the models supported in the cli
 def show_model_list():
     models = [[model] for model in model_list]
-    return tabulate(models, headers=["model_name"], tablefmt="grid")
+    return tabulate(models, headers=["model_name"], tablefmt="outline")
 
 
 # The function sets the model to be used for the response
 def set_model(model_name=""):
-    if model_name == "" or model_name == None:
+    if model_name == "" or model_name == None or type(model_name) != str:
         raise ModelNotSetException()
 
     if model_name not in model_list:
