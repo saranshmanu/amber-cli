@@ -1,7 +1,6 @@
 import click
 from src.core import set_api_key
 from src.core import get_api_key
-from src.core import get_api_key_date
 from src.core import get_gpt_response
 from src.core import set_model
 from src.core import show_model_list
@@ -85,21 +84,13 @@ def command_get_selected_model_name():
         click.echo(error() + message)
 
 
-@main.command("get-datetime", help=about_get_datetime_command)
-def command_show_api_key_date():
-    try:
-        datetime = get_api_key_date()
-        response = "{}: {}".format(success("Datetime"), datetime)
-        click.echo(response)
-    except:
-        click.echo(error() + ": Failed to get the datetime from the system cache.")
-
-
-@main.command("get-key", help=about_get_key_command)
+@main.command("get-api-key", help=about_get_key_command)
 def command_show_api_key():
     try:
-        key = get_api_key()
+        key, datetime = get_api_key()
         response = "{}: {}".format(success("Key"), key)
+        click.echo(response)
+        response = "{}: {}".format(success("Datetime"), datetime)
         click.echo(response)
     except:
         message = ": Failed to get the api key from the system cache."

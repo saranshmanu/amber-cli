@@ -26,18 +26,12 @@ def get_selected_model_name():
         return datetime
 
 
-# The function fetches the api key from the system cache
+# The function fetches the api key and the date when it was set from the system cache
 def get_api_key():
     with dbm.open(path) as db:
         api_key = db.get(CLI_GPT_API_KEY).decode()
-        return api_key
-
-
-# The function fetches the date when the api key was updated and saved in the system cache
-def get_api_key_date():
-    with dbm.open(path) as db:
         datetime = db.get(CLI_GPT_API_LAST_UPDATED_DATE).decode()
-        return datetime
+        return api_key, datetime
 
 
 # The function sets the authentication api key.

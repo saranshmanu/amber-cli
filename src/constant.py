@@ -47,11 +47,9 @@ about_get_key_command = """
 Returns the selected AI model in use
 """
 
-about_get_datetime_command = """
-Returns the time when the key was set
-"""
+
 about_get_key_command = """
-Returns the authentication api key in use
+Returns the datetime when the key was set and the authentication api key in use
 """
 
 CACHE_PATH = "cache"
