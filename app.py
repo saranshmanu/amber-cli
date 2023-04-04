@@ -8,25 +8,17 @@ from src.core import show_model_list
 from src.core import get_selected_model_name
 
 from src.util import success, error
+from src.constant import (
+    about_the_cli,
+    about_authentication_command,
+    about_model_command,
+    about_prompt_command,
+    about_show_supported_model_command,
+    about_get_datetime_command,
+    about_get_key_command,
+)
 
-about = """
-Language modeling (LM) is the use of various statistical and probabilistic techniques to determine 
-the probability of a given sequence of words occurring in a sentence. Language models analyze bodies 
-of text data to provide a basis for their word predictions.
-
-Examples,
-ChatGPT is an artificial-intelligence chatbot developed by OpenAI and launched in November 2022. 
-It is built on top of OpenAI's GPT-3.5 and GPT-4 families of large language models and has been 
-fine-tuned using both supervised and reinforcement learning techniques.
-
-The command line sends a request and generates a response based on the entered prompt by using Open AI's Language Models.
-"""
-main = click.Group(help=about)
-
-
-about_authentication_command = """
-Response is only generated after the api key is added to the command line.
-"""
+main = click.Group(help=about_the_cli)
 
 
 @main.command("authentication", help=about_authentication_command)
@@ -40,27 +32,15 @@ def command_set_api_key(key):
         click.echo(error() + ": Failed to set the api key.")
 
 
-about_model_command = """
-Checks whether the passed model is supported and if valid then use it by default
-"""
-
-
 @main.command("model", help=about_model_command)
 @click.option("--name", required=True, help="OpenAI supported model name")
 def command_set_selected_model(name):
     try:
         set_model(name)
-        response = "{}: The selected model name is valid. Added to the cache.".format(
-            success("Status")
-        )
-        click.echo(response)
+        message = ": The selected model name is valid. Added to the cache."
+        click.echo(success("Status") + message)
     except:
         click.echo(error() + ": Failed to set the model.")
-
-
-about_prompt_command = """
-Returns a generated response from the GPT server
-"""
 
 
 @main.command("prompt", help=about_prompt_command)
@@ -79,15 +59,8 @@ def commaand_get_gpt_response(message):
             response = "{}\n{}".format(success("Response"), text)
             click.echo(response)
     except:
-        click.echo(
-            error()
-            + ": Failed to generate a response based on the entered prompt. Please try again later."
-        )
-
-
-about_show_supported_model_command = """
-Returns the list of supported models using the command line
-"""
+        message = ": Failed to generate a response based on the entered prompt. Please try again later."
+        click.echo(error() + message)
 
 
 @main.command("show-supported-models", help=about_show_supported_model_command)
@@ -97,14 +70,8 @@ def command_show_supported_models():
         response = "{}\n\n{}".format(success("Models"), models)
         click.echo(response)
     except:
-        click.echo(
-            error() + ": Failed to show the supported models from the system cache."
-        )
-
-
-about_get_key_command = """
-Returns the selected AI model in use
-"""
+        message = ": Failed to show the supported models from the system cache."
+        click.echo(error() + message)
 
 
 @main.command("get-selected-model", help=about_get_key_command)
@@ -114,14 +81,8 @@ def command_get_selected_model_name():
         response = "{}: {}".format(success("Key"), key)
         click.echo(response)
     except:
-        click.echo(
-            error() + ": Failed to get the selected model from the system cache."
-        )
-
-
-about_get_datetime_command = """
-Returns the time when the key was set
-"""
+        message = ": Failed to get the selected model from the system cache."
+        click.echo(error() + message)
 
 
 @main.command("get-datetime", help=about_get_datetime_command)
@@ -134,11 +95,6 @@ def command_show_api_key_date():
         click.echo(error() + ": Failed to get the datetime from the system cache.")
 
 
-about_get_key_command = """
-Returns the authentication api key in use
-"""
-
-
 @main.command("get-key", help=about_get_key_command)
 def command_show_api_key():
     try:
@@ -146,7 +102,8 @@ def command_show_api_key():
         response = "{}: {}".format(success("Key"), key)
         click.echo(response)
     except:
-        click.echo(error() + ": Failed to get the api key from the system cache.")
+        message = ": Failed to get the api key from the system cache."
+        click.echo(error() + message)
 
 
 if __name__ == "__main__":
