@@ -54,7 +54,7 @@ CONFIG_COMMAND = {
 }
 
 
-CACHE_PATH = os.path.expanduser("~") + "/.language-model"
+CACHE_PATH = os.path.join(os.path.expanduser("~"), ".language-model")
 
 LANGUAGE_MODEL_NAME = "LANGUAGE_MODEL_NAME"
 LANGUAGE_MODEL_API_KEY = "LANGUAGE_MODEL_API_KEY"
