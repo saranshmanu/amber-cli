@@ -1,3 +1,5 @@
+import os
+
 model_list = [
     "text-davinci-003",
     "text-davinci-002",
@@ -52,7 +54,7 @@ CONFIG_COMMAND = {
 }
 
 
-CACHE_PATH = "cache"
+CACHE_PATH = os.path.expanduser("~") + "/.language-model"
 
 LANGUAGE_MODEL_NAME = "LANGUAGE_MODEL_NAME"
 LANGUAGE_MODEL_API_KEY = "LANGUAGE_MODEL_API_KEY"
