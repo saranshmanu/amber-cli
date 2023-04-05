@@ -1,6 +1,5 @@
 /venv
 /build
-/dist/app
+/dist
 **/__pycache__/
-**/app.spec
 **/cache.db
