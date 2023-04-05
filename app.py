@@ -10,6 +10,8 @@ from src.core import (
 from src.constant import about_the_cli, AUTHENTICATION_COMMAND, MODEL_COMMAND, PROMPT_COMMAND, CONFIG_COMMAND
 from src.error import APIKeyNotSetException, ModelNotSetException
 from src.util import success, error_message
+from rich.progress import track
+from time import sleep
 
 main = click.Group(help=about_the_cli)
 
@@ -43,6 +45,9 @@ def set_language_model_name(name):
 @click.option("--message", type=str, required=True, help=PROMPT_COMMAND["PARAMS"]["--message"])
 def get_language_model_response(message):
     try:
+        for _ in track(range(10), description="[green]Generating a response"):
+            sleep(0.1)
+
         response = fetch_language_model_response(message)
         choices = response.get("choices")
 
@@ -50,7 +55,7 @@ def get_language_model_response(message):
             if choice != None:
                 text = choice.get("text")
                 text = text.replace("\n\n", "\n")
-            response = "{}\n{}".format(success("Response"), text)
+            response = "{}\n{}".format(success(message), text)
             click.echo(response)
     except:
         message = error_message("Failed to generate a response based on the entered prompt. Please try again later.")
