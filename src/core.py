@@ -2,36 +2,47 @@ import openai
 import dbm
 from tabulate import tabulate
 from datetime import datetime
+from src.util import is_null
 from src.error import (
     APIKeyNotSetException,
-    PromptNotSetException,
+    APIKeyNotValidException,
+    PromptNotValidException,
     ModelNotSetException,
     ModelNotValidException,
 )
-
 from src.constant import (
     model_list,
     CACHE_PATH,
-    CLI_GPT_MODEL,
-    CLI_GPT_API_KEY,
-    CLI_GPT_API_LAST_UPDATED_DATE,
+    LANGUAGE_MODEL_NAME,
+    LANGUAGE_MODEL_API_KEY,
+    LANGUAGE_MODEL_UPDATION_DATE,
 )
 
 path = CACHE_PATH
 
+# The function returns information about all the models supported in the cli
+def get_language_models():
+    models = [[model] for model in model_list]
+    return tabulate(models, headers=["model_name"], tablefmt="outline")
+
+
 # The function fetches the selected model from the system cache
-def get_selected_model_name():
-    with dbm.open(path) as db:
-        datetime = db.get(CLI_GPT_MODEL).decode()
-        return datetime
+def get_selected_language_model_name():
+    with dbm.open(path, "r") as db:
+        model = db.get(LANGUAGE_MODEL_NAME)
+        if model == None:
+            raise ModelNotSetException()
+        return model.decode()
 
 
 # The function fetches the api key and the date when it was set from the system cache
 def get_api_key():
-    with dbm.open(path) as db:
-        api_key = db.get(CLI_GPT_API_KEY).decode()
-        datetime = db.get(CLI_GPT_API_LAST_UPDATED_DATE).decode()
-        return api_key, datetime
+    with dbm.open(path, "r") as db:
+        api_key = db.get(LANGUAGE_MODEL_API_KEY)
+        datetime = db.get(LANGUAGE_MODEL_UPDATION_DATE)
+        if api_key == None:
+            raise APIKeyNotSetException()
+        return api_key.decode(), datetime.decode()
 
 
 # The function sets the authentication api key.
@@ -39,47 +50,45 @@ def set_api_key(api_key=""):
     # "sk-BAwzEWP224DgC1k2tDAxT3BlckFJU7OMYhzfmEvqrEDuvlVA"
     now = datetime.now()
 
-    if api_key == "" or api_key == None or type(api_key) != str:
-        raise APIKeyNotSetException()
+    if is_null(api_key):
+        raise APIKeyNotValidException()
 
     with dbm.open(path, "c") as db:
-        db[CLI_GPT_API_KEY] = api_key
-        db[CLI_GPT_API_LAST_UPDATED_DATE] = now.strftime("%d/%m/%Y %H:%M:%S")
+        db[LANGUAGE_MODEL_API_KEY] = api_key
+        db[LANGUAGE_MODEL_UPDATION_DATE] = now.strftime("%d/%m/%Y %H:%M:%S")
 
 
-# The function returns information about all the models supported in the cli
-def show_model_list():
-    models = [[model] for model in model_list]
-    return tabulate(models, headers=["model_name"], tablefmt="outline")
-
-
-# The function sets the model to be used for the response
-def set_model(model_name=""):
-    if model_name == "" or model_name == None or type(model_name) != str:
+# The function saves the language model to be used for the response
+def set_language_model(model_name=""):
+    if is_null(model_name):
         raise ModelNotSetException()
 
+    # Checks if the model is supported or not
     if model_name not in model_list:
         raise ModelNotValidException()
 
     with dbm.open(path, "c") as db:
-        db[CLI_GPT_MODEL] = model_name
+        db[LANGUAGE_MODEL_NAME] = model_name
 
 
-# The function queries the Open AI server for the GPT response.
-def get_gpt_response(prompt=""):
-    with dbm.open(path) as db:
-        api_key = db.get(CLI_GPT_API_KEY).decode()
-        model_name = db.get(CLI_GPT_MODEL).decode()
-        if api_key == "" or api_key == None or type(api_key) != str:
-            raise APIKeyNotSetException()
-        if model_name == "" or model_name == None or type(model_name) != str:
-            raise ModelNotSetException()
-
+# The function queries the Open AI server for the selected language model response.
+def fetch_language_model_response(prompt=""):
     if prompt == "" or prompt == None or type(prompt) != str:
-        raise PromptNotSetException()
+        raise PromptNotValidException()
+
+    with dbm.open(path, "r") as db:
+        api_key = db.get(LANGUAGE_MODEL_API_KEY).decode()
+        model_name = db.get(LANGUAGE_MODEL_NAME).decode()
+
+        if is_null(api_key):
+            raise APIKeyNotSetException()
+
+        if is_null(model_name):
+            raise ModelNotSetException()
 
     openai.api_key = api_key
 
+    # Requests a response based on the prompt from openai
     response = openai.Completion.create(
         model=model_name,
         prompt=prompt,

@@ -19,7 +19,7 @@ Language modeling (LM) is the use of various statistical and probabilistic techn
 the probability of a given sequence of words occurring in a sentence. Language models analyze bodies 
 of text data to provide a basis for their word predictions.
 
-Examples,
+Example of a Language Model,
 ChatGPT is an artificial-intelligence chatbot developed by OpenAI and launched in November 2022. 
 It is built on top of OpenAI's GPT-3.5 and GPT-4 families of large language models and has been 
 fine-tuned using both supervised and reinforcement learning techniques.
@@ -27,33 +27,33 @@ fine-tuned using both supervised and reinforcement learning techniques.
 The command line sends a request and generates a response based on the entered prompt by using Open AI's Language Models.
 """
 
-about_authentication_command = """
-Response is only generated after the api key is added to the command line.
-"""
+AUTHENTICATION_COMMAND = {
+    "ABOUT": "Authentication command module to perform actions based on your api key",
+    "PARAMS": {"--key": "openai authentication api key"},
+}
 
-about_model_command = """
-Checks whether the passed model is supported and if valid then use it by default
-"""
+MODEL_COMMAND = {
+    "ABOUT": "Model command module to check whether the selected model name is supported and select for default use",
+    "PARAMS": {"--name": "Language model name"},
+}
 
-about_prompt_command = """
-Returns a generated response from the GPT server
-"""
+PROMPT_COMMAND = {
+    "ABOUT": "Prompt command module to generate a response based on the selected language model",
+    "PARAMS": {"--message": "Input prompt"},
+}
 
-about_show_supported_model_command = """
-Returns the list of supported models using the command line
-"""
+CONFIG_COMMAND = {
+    "ABOUT": "Configuration command module to show the data variables saved in the system cache",
+    "SUB_MODULE": {
+        "SELECTED_MODEL": {"ABOUT": "Returns the selected language model"},
+        "AUTHENTICATION_KEY": {"ABOUT": "Returns the authenticaion api key"},
+        "SUPPORTED_MODELS": {"ABOUT": "Returns a list of supported language models"},
+    },
+}
 
-about_get_key_command = """
-Returns the selected AI model in use
-"""
-
-
-about_get_key_command = """
-Returns the datetime when the key was set and the authentication api key in use
-"""
 
 CACHE_PATH = "cache"
 
-CLI_GPT_MODEL = "CLI_GPT_MODEL"
-CLI_GPT_API_KEY = "CLI_GPT_API_KEY"
-CLI_GPT_API_LAST_UPDATED_DATE = "CLI_GPT_API_LAST_UPDATED_DATE"
+LANGUAGE_MODEL_NAME = "LANGUAGE_MODEL_NAME"
+LANGUAGE_MODEL_API_KEY = "LANGUAGE_MODEL_API_KEY"
+LANGUAGE_MODEL_UPDATION_DATE = "LANGUAGE_MODEL_UPDATION_DATE"

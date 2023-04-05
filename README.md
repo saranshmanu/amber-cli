@@ -1,1 +1,1 @@
-# gpt-command-line-interface
+# language-model-command-line-interface

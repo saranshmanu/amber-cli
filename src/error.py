@@ -4,9 +4,15 @@ class APIKeyNotSetException(Exception):
         super().__init__(self.message)
 
 
-class PromptNotSetException(Exception):
+class APIKeyNotValidException(Exception):
     def __init__(self, *args: object) -> None:
-        self.message = "Prompt is empty"
+        self.message = "OpenAI API key is not valid"
+        super().__init__(self.message)
+
+
+class PromptNotValidException(Exception):
+    def __init__(self, *args: object) -> None:
+        self.message = "Prompt is either empty or not valid"
         super().__init__(self.message)
 
 
